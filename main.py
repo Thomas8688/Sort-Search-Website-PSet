@@ -1,22 +1,23 @@
-from flask import Flask
+from flask import Flask, render_template
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return 'Home Page'
+    return render_template("index.html")
+    #return 'Home Page'
 
 @app.route('/merge')
 def Merge():
-    return 'Merge Sort'
+    return render_template("merge.html")
 
 @app.route('/bubble')
 def Bubble():
-    return 'Bubble Sort'
+    return render_template("bubble.html")
 
 @app.route('/linear')
 def Linear():
-    return 'Linear Search'
+    return render_template("linear.html")
 
 @app.route('/binary')
 def Binary():
-    return 'Binary Search'
+    return render_template("binary.html")
