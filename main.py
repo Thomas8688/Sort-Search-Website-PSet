@@ -5,18 +5,18 @@ app = Flask(__name__)
 def home():
     return 'Home Page'
 
-@app.route('/MergeSort')
+@app.route('/merge')
 def Merge():
     return 'Merge Sort'
 
-@app.route('/BubbleSort')
+@app.route('/bubble')
 def Bubble():
     return 'Bubble Sort'
 
-@app.route('/LinearSearch')
+@app.route('/linear')
 def Linear():
     return 'Linear Search'
 
-@app.route('/BinarySearch')
+@app.route('/binary')
 def Binary():
     return 'Binary Search'
