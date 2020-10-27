@@ -1,38 +1,46 @@
-<!DOCTYPE html>
-<html>
+{% extends 'base.html' %}
 
-    <head>
-        <meta charset="UTF-8">
-        <title>SearchSort - BS</title>
-        <style type="text/css">
-            body
-            {
-                fontface: Sans-serif;
-                padding: 0;
-                margin:20;
-                background: DimGrey
-            }
-            h2
-            {
-                fontface: Sans-serif;
-                margin:0;
-                padding: 0;
-                text-align: center;
-            }
-            p
-            {
-                fontface: Sans-serif;
-                marin:0;
-                padding: 0;
-                text-align: center;
-            }
-        </style>
-    </head>
+{% block head %}
+<title>SearchSort - BS</title>
+<style>
+.center {
+    margin: auto;
+    width: 60%;
+    }
 
-    <body>
-        <h2 style="color:Gainsboro">Bubble Sort</h2>
-        <hr/>
-        <p style="color:Gainsboro">Bubble Sort Algorithm</p>
-    </body>
+</style>
 
-</html>
+{% endblock %}
+
+{% block body %}
+<br>
+<h2 class="text-center">Bubble Sort</h2>
+<br>
+<div class="col-md-12 text-center">
+    <a href="/" class="btn btn-outline-secondary" role="button" aria-pressed="true">Home</a>
+    <a href="#" class="btn btn-outline-secondary" role="button" aria-pressed="true">Merge</a>
+    <a href="#" class="btn btn-outline-secondary" role="button" aria-pressed="true">Linear</a>
+    <a href="#" class="btn btn-outline-secondary" role="button" aria-pressed="true">Binary</a>
+</div>
+<br>
+<hr>
+<br>
+<h4 class="text-center">Algorithm in Action</h4>
+<form action ="/bubble" method="POST">
+    <div class="input-group input-groupt-lg center">
+        <input type="text" class="form-control" placeholder="Unsorted List" aria-label="Unsorted List" aria-describedby="button-addon2" name="numbers" id="numbers">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Sort</button>
+        </div>
+    </div>
+</form>
+<p class="text-center">Sorted List: <b>{{sorted}}<b><p>
+<br>
+<hr>
+<br>
+<h4 class="text-center">Explanation</h4>
+<br>
+<hr>
+<br>
+<h4 class="text-center">Time and Space Complexity</h4>
+{% endblock %}
