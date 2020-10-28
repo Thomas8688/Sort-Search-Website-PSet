@@ -14,7 +14,7 @@
 
 {% block body %}
 <br>
-<h2 class="text-center">SearchSort</h2>
+<h2 class="text-center">Bubble Sort</h2>
 <br>
 <div class="col-md-12 text-center">
     <a href="/" class="btn btn-outline-secondary" role="button" aria-pressed="true">Home</a>
@@ -70,5 +70,17 @@
 <br>
 <hr>
 <br>
-<h4 class="text-center">Description</h4>
+<h4 class="text-center">Algorithm in Action</h4>
+<br>
+<h5 class="text-center">Enter List</h5>
+<form action ="/bubble/enter" method="POST">
+    <div class="input-group input-groupt-lg center">
+        <input type="text" class="form-control" placeholder="unsorted list" aria-label="unsorted list" aria-describedby="button-addon2" name="numbers" id="numbers">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Sort</button>
+        </div>
+    </div>
+</form>
+<p class="text-center">Sorted List: <b>{{sorted}}</b><p>
+
 {% endblock %}
