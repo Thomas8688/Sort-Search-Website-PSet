@@ -67,9 +67,9 @@ def bubblegnerate():
                     else:
                         return render_template("bubblegenerate.html", sort = [], genlst = ['Invalid Amount'])
                 else:
-                    return render_template("bubblegenerate.html", sort = [], genlst = ['Invalid Range'])
+                    return render_template("bubblegenerate.html", sort = [], genlst = ['Invalid Range - Format "min, max"'])
             except:
-                return render_template("bubblegenerate.html", sort = [], genlst = ['Invalid Amount'])
+                return render_template("bubblegenerate.html", sort = [], genlst = ['Invalid Input - Amount Format "num" - Range Format "min, max"'])
         else:
                 return render_template("bubblegenerate.html", sort = [], genlst = [])
     else:
@@ -98,3 +98,12 @@ def bubblefile():
         else:
             return render_template("bubblefile.html", cont=['File must be .csv'], sort = [])
     return render_template("bubblefile.html", cont=[], sort = [])
+
+@app.route('/bubble/explan')
+def bubbleexplan():
+    return render_template("bubbleexpl.html")
+
+
+@app.route('/bubble/comps')
+def bubblecomps():
+    return render_template("bubblecomps.html")
