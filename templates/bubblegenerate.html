@@ -7,6 +7,10 @@
     margin: auto;
     width: 60%;
     }
+.btncenter {
+    margin: auto;
+    width: 7%;
+    }
 
 </style>
 
@@ -75,6 +79,13 @@
 <h5 class="text-center">Generate Random List</h5>
 <br>
 <form action ="/bubble/generate" method="POST">
+    <div class="form-group form-groupt-lg btncenter">
+        <select class="btn-outline-secondary form-control" name="updown" id="updown">
+            <option>Ascending</option>
+            <option>Descending</option>
+        </select>
+    </div>
+    <br>
     <div class="input-group input-groupt-lg center">
         <input type="text" placeholder="amount of random numbers" aria-label="amount" class="form-control" name="amount" id="amounts">
         <input type="text" placeholder="range of random numbers" aria-label="range" class="form-control" name="range" id="range">

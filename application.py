@@ -18,6 +18,21 @@ def bubbleSort(lst):
         loopnum -= 1
     return lst, comps
 
+def bubbleSortRev(lst):
+    lst = [int(x) for x in lst]
+    comps = 0
+    passes = -1
+    loopnum = len(lst)-1
+    while loopnum > 0 and passes != 0:
+        passes = 0
+        for i in range(loopnum):
+            comps += 1
+            if lst[i] < lst[i+1]:
+                passes += 1
+                lst[i], lst[i+1] = lst[i+1], lst[i]
+        loopnum -= 1
+    return lst, comps
+
 def validate(lst):
     valid = True
     for item  in lst:
@@ -38,6 +53,7 @@ def home():
 def bubbleenter():
     if request.method == 'POST':
         nums = request.form['numbers']
+        dir = request.form['updown']
         if nums:
             lst = nums.split(",")
             while lst[-1] in [",", ""]:
@@ -45,9 +61,14 @@ def bubbleenter():
             if validate(lst):
                 for i in range(len(lst)):
                     lst[i] = int(lst[i])
-                strt = time.time()
-                srt, cmps = bubbleSort(lst)
-                end = time.time()
+                if str(dir) == "Ascending":
+                    strt = time.time()
+                    srt, cmps = bubbleSort(lst)
+                    end = time.time()
+                else:
+                    strt = time.time()
+                    srt, cmps = bubbleSortRev(lst)
+                    end = time.time()
                 tkn = end-strt
                 if str(tkn) == "0.0":
                     tkn = "Negligible"
@@ -65,6 +86,7 @@ def bubblegnerate():
     if request.method == 'POST':
         amount = request.form['amount']
         rnge = request.form['range']
+        dir = request.form['updown']
         if amount and rnge:
             try:
                 num = int(amount)
@@ -76,9 +98,14 @@ def bubblegnerate():
                         lst = []
                         for i in range(num):
                             lst.append(randint(min, max))
-                        strt = time.time()
-                        srt, cmps = bubbleSort(lst)
-                        end = time.time()
+                        if str(dir) == "Ascending":
+                            strt = time.time()
+                            srt, cmps = bubbleSort(lst)
+                            end = time.time()
+                        else:
+                            strt = time.time()
+                            srt, cmps = bubbleSortRev(lst)
+                            end = time.time()
                         tkn = end-strt
                         if str(tkn) == "0.0":
                             tkn = "Negligible"
@@ -99,6 +126,7 @@ def bubblegnerate():
 def bubblefile():
     if request.method == 'POST':
         filecont = request.form['filepath']
+        dir = request.form['updown']
         type = filecont.split(".")
         if type[-1] == "csv":
             if path.exists(filecont):
@@ -108,9 +136,14 @@ def bubblefile():
                 if validate(data):
                     for i in range(len(data)):
                         data[i] = int(data[i])
-                    strt = time.time()
-                    srt, cmps = bubbleSort(data)
-                    end = time.time()
+                    if str(dir) == "Ascending":
+                        strt = time.time()
+                        srt, cmps = bubbleSort(data)
+                        end = time.time()
+                    else:
+                        strt = time.time()
+                        srt, cmps = bubbleSortRev(data)
+                        end = time.time()
                     tkn = end-strt
                     if str(tkn) == "0.0":
                         tkn = "Negligible"
