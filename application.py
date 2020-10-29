@@ -1,15 +1,18 @@
 from flask import Flask, render_template, url_for, request
 from random import randint
 from os import path
+import time
 
 def bubbleSort(lst):
     lst = [int(x) for x in lst]
+    comps = 0
     lenlist = len(lst)
     for i in range(lenlist-1):
         for j in range(0, lenlist-i-1):
+            comps += 1
             if lst[j] > lst[j+1]:
                 lst[j], lst[j+1] = lst[j+1], lst[j]
-    return lst
+    return lst, comps
 
 def validate(lst):
     valid = True
@@ -30,20 +33,27 @@ def home():
 @app.route('/bubble/enter', methods=['POST', 'GET'])
 def bubbleenter():
     if request.method == 'POST':
-        task_content = request.form['numbers']
-        if task_content:
-            task_content = task_content.split(",")
-            while task_content[-1] in [",", ""]:
-                task_content.pop(-1)
-            if validate(task_content):
-                task_content = bubbleSort(task_content)
-                return render_template("bubbleenter.html", sorted = task_content)
+        nums = request.form['numbers']
+        if nums:
+            lst = nums.split(",")
+            while lst[-1] in [",", ""]:
+                lst.pop(-1)
+            if validate(lst):
+                for i in range(len(lst)):
+                    lst[i] = int(lst[i])
+                strt = time.time()
+                srt, cmps = bubbleSort(lst)
+                end = time.time()
+                tkn = end-strt
+                if str(tkn) == "0.0":
+                    tkn = "Negligible"
+                return render_template("bubbleenter.html", sorted = srt, unsorted = lst, compars = cmps, time = tkn)
             else:
-                return render_template("bubbleenter.html", sorted = [])
+                return render_template("bubbleenter.html", sorted = [], unsorted = [], compars = [], time = [])
         else:
-            return render_template("bubbleenter.html", sorted = [])
+            return render_template("bubbleenter.html", sorted = [], unsorted = [], compars = [], time = [])
     else:
-        return render_template("bubbleenter.html", sorted = [])
+        return render_template("bubbleenter.html", sorted = [], unsorted = [], compars = [], time = [])
 
 
 @app.route('/bubble/generate', methods=['POST', 'GET'])
