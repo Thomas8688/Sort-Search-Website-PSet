@@ -6,12 +6,16 @@ import time
 def bubbleSort(lst):
     lst = [int(x) for x in lst]
     comps = 0
-    lenlist = len(lst)
-    for i in range(lenlist-1):
-        for j in range(0, lenlist-i-1):
+    passes = -1
+    loopnum = len(lst)-1
+    while loopnum > 0 and passes != 0:
+        passes = 0
+        for i in range(loopnum):
             comps += 1
-            if lst[j] > lst[j+1]:
-                lst[j], lst[j+1] = lst[j+1], lst[j]
+            if lst[i] > lst[i+1]:
+                passes += 1
+                lst[i], lst[i+1] = lst[i+1], lst[i]
+        loopnum -= 1
     return lst, comps
 
 def validate(lst):
@@ -49,11 +53,11 @@ def bubbleenter():
                     tkn = "Negligible"
                 return render_template("bubbleenter.html", sorted = srt, unsorted = lst, compars = cmps, time = tkn)
             else:
-                return render_template("bubbleenter.html", sorted = [], unsorted = [], compars = [], time = [])
+                return render_template("bubbleenter.html", sorted = [], unsorted = [])
         else:
-            return render_template("bubbleenter.html", sorted = [], unsorted = [], compars = [], time = [])
+            return render_template("bubbleenter.html", sorted = [], unsorted = [])
     else:
-        return render_template("bubbleenter.html", sorted = [], unsorted = [], compars = [], time = [])
+        return render_template("bubbleenter.html", sorted = [], unsorted = [])
 
 
 @app.route('/bubble/generate', methods=['POST', 'GET'])
@@ -68,14 +72,19 @@ def bubblegnerate():
                 min = int(rnge[0])
                 max = int(rnge[1])
                 if len(rnge) == 2 and validate(rnge) and min < max:
-                    if num > 0 and num < 101:
+                    if num > 0 and num < 10001:
                         lst = []
                         for i in range(num):
                             lst.append(randint(min, max))
-                        srt = bubbleSort(lst)
-                        return render_template("bubblegenerate.html", sort = srt, genlst = lst)
+                        strt = time.time()
+                        srt, cmps = bubbleSort(lst)
+                        end = time.time()
+                        tkn = end-strt
+                        if str(tkn) == "0.0":
+                            tkn = "Negligible"
+                        return render_template("bubblegenerate.html", sort = srt, genlst = lst, compars = cmps, time = tkn)
                     else:
-                        return render_template("bubblegenerate.html", sort = [], genlst = ['Invalid Amount'])
+                        return render_template("bubblegenerate.html", sort = [], genlst = ['Amount out of Range'])
                 else:
                     return render_template("bubblegenerate.html", sort = [], genlst = ['Invalid Range - Format "min, max"'])
             except:
@@ -99,8 +108,13 @@ def bubblefile():
                 if validate(data):
                     for i in range(len(data)):
                         data[i] = int(data[i])
-                    datasrt = bubbleSort(data)
-                    return render_template("bubblefile.html", cont=data, sort=datasrt)
+                    strt = time.time()
+                    srt, cmps = bubbleSort(data)
+                    end = time.time()
+                    tkn = end-strt
+                    if str(tkn) == "0.0":
+                        tkn = "Negligible"
+                    return render_template("bubblefile.html", cont=data, sort=srt, compars = cmps, time = tkn)
                 else:
                     return render_template("bubblefile.html", cont=['Invalid Data'], sort = [])
             else:
