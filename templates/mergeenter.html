@@ -7,6 +7,10 @@
     margin: auto;
     width: 60%;
     }
+.btncenter {
+    margin: auto;
+    width: 9%;
+    }
 
 </style>
 
@@ -14,7 +18,7 @@
 
 {% block body %}
 <br>
-<h2 class="text-center">Bubble Sort</h2>
+<h2 class="text-center">Merge Sort</h2>
 <br>
 <div class="col-md-12 text-center">
     <a href="/" class="btn btn-outline-secondary" role="button" aria-pressed="true">Home</a>
@@ -70,5 +74,28 @@
 <br>
 <hr>
 <br>
-<h4 class="text-center">Explanation</h4>
+<h4 class="text-center">Algorithm in Action</h4>
+<br>
+<h5 class="text-center">Enter List</h5>
+<br>
+<form action ="/merge/enter" method="POST">
+    <div class="form-group form-groupt-lg btncenter">
+        <select class="btn-outline-secondary form-control" name="updown" id="updown">
+            <option>Ascending</option>
+            <option>Descending</option>
+        </select>
+    </div>
+    <br>
+    <div class="input-group input-groupt-lg center">
+        <input type="text" class="form-control" placeholder="unsorted list" aria-label="unsorted list" aria-describedby="button-addon2" name="numbers" id="numbers">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Sort</button>
+        </div>
+    </div>
+</form>
+<br>
+<p class="text-center">Unsorted List: <b>{{unsorted}}</b></p>
+<p class="text-center">Sorted List: <b>{{sorted}}</b></p>
+<p class="text-center">Time Taken (Seconds): <b>{{time}}</b></p>
+<p class="text-center">Number of Comparisons: <b>{{compars}}</b></p>
 {% endblock %}
