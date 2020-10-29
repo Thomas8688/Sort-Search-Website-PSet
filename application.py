@@ -74,7 +74,7 @@ def bubbleenter():
                     tkn = "Negligible"
                 return render_template("bubbleenter.html", sorted = srt, unsorted = lst, compars = cmps, time = tkn)
             else:
-                return render_template("bubbleenter.html", sorted = [], unsorted = [])
+                return render_template("bubbleenter.html", sorted = [], unsorted = ['Invalid List - List Format CSN'])
         else:
             return render_template("bubbleenter.html", sorted = [], unsorted = [])
     else:
