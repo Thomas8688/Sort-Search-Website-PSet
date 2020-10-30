@@ -242,45 +242,45 @@ def mergeenter():
         return render_template("mergeenter.html", sorted = [], unsorted = [])
 
 
-# @app.route('/bubble/generate', methods=['POST', 'GET'])
-# def bubblegnerate():
-#     if request.method == 'POST':
-#         amount = request.form['amount']
-#         rnge = request.form['range']
-#         dir = request.form['updown']
-#         if amount and rnge:
-#             try:
-#                 num = int(amount)
-#                 rnge = rnge.split(",")
-#                 min = int(rnge[0])
-#                 max = int(rnge[1])
-#                 if len(rnge) == 2 and validate(rnge) and min < max:
-#                     if num > 0 and num < 10001:
-#                         lst = []
-#                         for i in range(num):
-#                             lst.append(randint(min, max))
-#                         if str(dir) == "Ascending":
-#                             strt = time.time()
-#                             srt, cmps = bubbleSort(lst)
-#                             end = time.time()
-#                         else:
-#                             strt = time.time()
-#                             srt, cmps = bubbleSortRev(lst)
-#                             end = time.time()
-#                         tkn = end-strt
-#                         if str(tkn) == "0.0":
-#                             tkn = "Negligible"
-#                         return render_template("bubblegenerate.html", sort = srt, genlst = lst, compars = cmps, time = tkn)
-#                     else:
-#                         return render_template("bubblegenerate.html", sort = [], genlst = ['Amount out of Range'])
-#                 else:
-#                     return render_template("bubblegenerate.html", sort = [], genlst = ['Invalid Range - Format "min, max"'])
-#             except:
-#                 return render_template("bubblegenerate.html", sort = [], genlst = ['Invalid Input - Amount Format "num" - Range Format "min, max"'])
-#         else:
-#                 return render_template("bubblegenerate.html", sort = [], genlst = [])
-#     else:
-#         return render_template("bubblegenerate.html", sort = [], genlst = [])
+@app.route('/merge/generate', methods=['POST', 'GET'])
+def mergegnerate():
+    if request.method == 'POST':
+        amount = request.form['amount']
+        rnge = request.form['range']
+        dir = request.form['updown']
+        if amount and rnge:
+            try:
+                num = int(amount)
+                rnge = rnge.split(",")
+                min = int(rnge[0])
+                max = int(rnge[1])
+                if len(rnge) == 2 and validate(rnge) and min < max:
+                    if num > 0 and num < 10001:
+                        lst = []
+                        for i in range(num):
+                            lst.append(randint(min, max))
+                        if str(dir) == "Ascending":
+                            strt = time.time()
+                            srt, cmps = mergeSort(lst)
+                            end = time.time()
+                        else:
+                            strt = time.time()
+                            srt, cmps = mergeSortRev(lst)
+                            end = time.time()
+                        tkn = end-strt
+                        if str(tkn) == "0.0":
+                            tkn = "Negligible"
+                        return render_template("mergegenerate.html", sort = srt, genlst = lst, compars = cmps, time = tkn)
+                    else:
+                        return render_template("mergegenerate.html", sort = [], genlst = ['Amount out of Range'])
+                else:
+                    return render_template("mergegenerate.html", sort = [], genlst = ['Invalid Range - Format "min, max"'])
+            except:
+                return render_template("mergegenerate.html", sort = [], genlst = ['Invalid Input - Amount Format "num" - Range Format "min, max"'])
+        else:
+                return render_template("mergegenerate.html", sort = [], genlst = [])
+    else:
+        return render_template("mergegenerate.html", sort = [], genlst = [])
 #
 #
 # @app.route('/bubble/file', methods=['POST', 'GET'])
