@@ -44,12 +44,14 @@ def validate(lst):
 
 def sort(lstA, lstB):
     returnLst = []
+    comps = 0
     while lstA and lstB:
+        comps += 1
         if lstA[0] < lstB[0]:
             returnLst.append(lstA.pop(0))
         else:
             returnLst.append(lstB.pop(0))
-    return returnLst + lstA + lstB
+    return returnLst + lstA + lstB, comps
 
 def mergeSort(lst):
     split = [[int(num)] for num in lst]
@@ -57,20 +59,22 @@ def mergeSort(lst):
     while len(split) != 1:
         i = 0
         while i < len(split)-1:
-            sorted = sort(split[i], split.pop(i+1))
-            comps += 1
+            sorted, adder = sort(split[i], split.pop(i+1))
             split[i] = sorted
+            comps += adder
             i += 1
     return split[0], comps
 
 def sortRev(lstA, lstB):
     returnLst = []
+    comps = 0
     while lstA and lstB:
+        comps += 1
         if lstA[0] > lstB[0]:
             returnLst.append(lstA.pop(0))
         else:
             returnLst.append(lstB.pop(0))
-    return returnLst + lstA + lstB
+    return returnLst + lstA + lstB, comps
 
 def mergeSortRev(lst):
     split = [[int(num)] for num in lst]
@@ -78,8 +82,8 @@ def mergeSortRev(lst):
     while len(split) != 1:
         i = 0
         while i < len(split)-1:
-            sorted = sortRev(split[i], split.pop(i+1))
-            comps += 1
+            sorted, adder = sortRev(split[i], split.pop(i+1))
+            comps += adder
             split[i] = sorted
             i += 1
     return split[0], comps
@@ -300,8 +304,9 @@ def mergeefile():
     if request.method == 'POST':
         filecont = request.form['filepath']
         dir = request.form['updown']
-        type = filecont.split(".")
-        if type[-1] == "csv":
+        if filecont:
+            type = filecont.split(".")
+        if filecont and type[-1] == "csv":
             if path.exists(filecont):
                 with open(filecont, 'r') as file:
                     data = file.read().replace('\n', '')
@@ -343,7 +348,7 @@ def linearenter():
     if request.method == 'POST':
         nums = request.form['numbers']
         src = request.form['search']
-        if nums:
+        if nums and search:
             lst = nums.split(",")
             while lst[-1] in [",", ""]:
                 lst.pop(-1)
@@ -364,46 +369,67 @@ def linearenter():
     else:
         return render_template("linearenter.html", unsorted = [])
 
-#
-# @app.route('/merge/generate', methods=['POST', 'GET'])
-# def mergegnerate():
+# @app.route('/linear/generate', methods=['POST', 'GET'])
+# def lineargen():
 #     if request.method == 'POST':
-#         amount = request.form['amount']
-#         rnge = request.form['range']
-#         dir = request.form['updown']
-#         if amount and rnge:
-#             try:
-#                 num = int(amount)
-#                 rnge = rnge.split(",")
-#                 min = int(rnge[0])
-#                 max = int(rnge[1])
-#                 if len(rnge) == 2 and validate(rnge) and min < max:
-#                     if num > 0 and num < 10001:
-#                         lst = []
-#                         for i in range(num):
-#                             lst.append(randint(min, max))
-#                         if str(dir) == "Ascending":
-#                             strt = time.time()
-#                             srt, cmps = mergeSort(lst)
-#                             end = time.time()
-#                         else:
-#                             strt = time.time()
-#                             srt, cmps = mergeSortRev(lst)
-#                             end = time.time()
-#                         tkn = end-strt
-#                         if str(tkn) == "0.0":
-#                             tkn = "Negligible"
-#                         return render_template("mergegenerate.html", sort = srt, genlst = lst, compars = cmps, time = tkn)
-#                     else:
-#                         return render_template("mergegenerate.html", sort = [], genlst = ['Amount out of Range'])
-#                 else:
-#                     return render_template("mergegenerate.html", sort = [], genlst = ['Invalid Range - Format "min, max"'])
-#             except:
-#                 return render_template("mergegenerate.html", sort = [], genlst = ['Invalid Input - Amount Format "num" - Range Format "min, max"'])
+#         amnt = request.form['amount']
+#         rng = request.form['range']
+#         src = request.form['search']
+#         if nums:
+#             lst = nums.split(",")
+#             while lst[-1] in [",", ""]:
+#                 lst.pop(-1)
+#             if validate(lst):
+#                 for i in range(len(lst)):
+#                     lst[i] = int(lst[i])
+#                 strt = time.time()
+#                 srt, cmps = linearSearch(lst, int(src))
+#                 end = time.time()
+#                 tkn = end-strt
+#                 if str(tkn) == "0.0":
+#                     tkn = "Negligible"
+#                 return render_template("linearenter.html", found = srt, search = src, unsorted = lst, compars = cmps, time = tkn)
+#             else:
+#                 return render_template("linearenter.html", unsorted = ['Invalid List - List Format CSN'])
 #         else:
-#                 return render_template("mergegenerate.html", sort = [], genlst = [])
+#             return render_template("linearenter.html", unsorted = [])
 #     else:
-#         return render_template("mergegenerate.html", sort = [], genlst = [])
+#         return render_template("linearenter.html", unsorted = [])
+
+@app.route('/linear/generate', methods=['POST', 'GET'])
+def lineargenerate():
+    if request.method == 'POST':
+        amount = request.form['amount']
+        rnge = request.form['range']
+        src = request.form['search']
+        if amount and rnge:
+            try:
+                num = int(amount)
+                rnge = rnge.split(",")
+                min = int(rnge[0])
+                max = int(rnge[1])
+                if len(rnge) == 2 and min < max:
+                    if num > 0 and num < 10001:
+                        lst = []
+                        for i in range(num):
+                            lst.append(randint(min, max))
+                        strt = time.time()
+                        srt, cmps = linearSearch(lst, src)
+                        end = time.time()
+                        tkn = end-strt
+                        if str(tkn) == "0.0":
+                            tkn = "Negligible"
+                        return render_template("mergegenerate.html", sort = srt, genlst = lst, compars = cmps, time = tkn)
+                    else:
+                        return render_template("mergegenerate.html", sort = [], genlst = ['Amount out of Range'])
+                else:
+                    return render_template("mergegenerate.html", sort = [], genlst = ['Invalid Range - Format "min, max"'])
+            except:
+                return render_template("mergegenerate.html", sort = [], genlst = ['Invalid Input - Amount Format "num" - Range Format "min, max"'])
+        else:
+                return render_template("mergegenerate.html", sort = [], genlst = [])
+    else:
+        return render_template("mergegenerate.html", sort = [], genlst = [])
 #
 #
 # @app.route('/merge/file', methods=['POST', 'GET'])
