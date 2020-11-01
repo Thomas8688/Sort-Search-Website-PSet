@@ -84,6 +84,18 @@ def mergeSortRev(lst):
             i += 1
     return split[0], comps
 
+def linearSearch(lst, searchItem):
+    lst = [int(num) for num in lst]
+    found = False
+    comps = 0
+    count = 0
+    while not found and count < len(lst):
+        comps += 1
+        if lst[count] == searchItem:
+            found = True
+        count += 1
+    return found, comps
+
 
 
 app = Flask(__name__)
@@ -281,10 +293,121 @@ def mergegnerate():
                 return render_template("mergegenerate.html", sort = [], genlst = [])
     else:
         return render_template("mergegenerate.html", sort = [], genlst = [])
+
+
+@app.route('/merge/file', methods=['POST', 'GET'])
+def mergeefile():
+    if request.method == 'POST':
+        filecont = request.form['filepath']
+        dir = request.form['updown']
+        type = filecont.split(".")
+        if type[-1] == "csv":
+            if path.exists(filecont):
+                with open(filecont, 'r') as file:
+                    data = file.read().replace('\n', '')
+                data = data.split(",")
+                if validate(data):
+                    for i in range(len(data)):
+                        data[i] = int(data[i])
+                    if str(dir) == "Ascending":
+                        strt = time.time()
+                        srt, cmps = mergeSort(data)
+                        end = time.time()
+                    else:
+                        strt = time.time()
+                        srt, cmps = mergeSortRev(data)
+                        end = time.time()
+                    tkn = end-strt
+                    if str(tkn) == "0.0":
+                        tkn = "Negligible"
+                    return render_template("mergeefile.html", cont=data, sort=srt, compars = cmps, time = tkn)
+                else:
+                    return render_template("mergeefile.html", cont=['Invalid Data'], sort = [])
+            else:
+                return render_template("mergeefile.html", cont=['Invalid Path'], sort = [])
+        else:
+            return render_template("mergeefile.html", cont=['File must be .csv'], sort = [])
+    return render_template("mergeefile.html", cont=[], sort = [])
+
+@app.route('/merge/explan')
+def mergeexplan():
+    return render_template("mergeexpl.html")
+
+
+@app.route('/merge/comps')
+def mergecomps():
+    return render_template("mergecomps.html")
+
+@app.route('/linear/enter', methods=['POST', 'GET'])
+def linearenter():
+    if request.method == 'POST':
+        nums = request.form['numbers']
+        src = request.form['search']
+        if nums:
+            lst = nums.split(",")
+            while lst[-1] in [",", ""]:
+                lst.pop(-1)
+            if validate(lst):
+                for i in range(len(lst)):
+                    lst[i] = int(lst[i])
+                strt = time.time()
+                srt, cmps = linearSearch(lst, int(src))
+                end = time.time()
+                tkn = end-strt
+                if str(tkn) == "0.0":
+                    tkn = "Negligible"
+                return render_template("linearenter.html", found = srt, search = src, unsorted = lst, compars = cmps, time = tkn)
+            else:
+                return render_template("linearenter.html", unsorted = ['Invalid List - List Format CSN'])
+        else:
+            return render_template("linearenter.html", unsorted = [])
+    else:
+        return render_template("linearenter.html", unsorted = [])
+
+#
+# @app.route('/merge/generate', methods=['POST', 'GET'])
+# def mergegnerate():
+#     if request.method == 'POST':
+#         amount = request.form['amount']
+#         rnge = request.form['range']
+#         dir = request.form['updown']
+#         if amount and rnge:
+#             try:
+#                 num = int(amount)
+#                 rnge = rnge.split(",")
+#                 min = int(rnge[0])
+#                 max = int(rnge[1])
+#                 if len(rnge) == 2 and validate(rnge) and min < max:
+#                     if num > 0 and num < 10001:
+#                         lst = []
+#                         for i in range(num):
+#                             lst.append(randint(min, max))
+#                         if str(dir) == "Ascending":
+#                             strt = time.time()
+#                             srt, cmps = mergeSort(lst)
+#                             end = time.time()
+#                         else:
+#                             strt = time.time()
+#                             srt, cmps = mergeSortRev(lst)
+#                             end = time.time()
+#                         tkn = end-strt
+#                         if str(tkn) == "0.0":
+#                             tkn = "Negligible"
+#                         return render_template("mergegenerate.html", sort = srt, genlst = lst, compars = cmps, time = tkn)
+#                     else:
+#                         return render_template("mergegenerate.html", sort = [], genlst = ['Amount out of Range'])
+#                 else:
+#                     return render_template("mergegenerate.html", sort = [], genlst = ['Invalid Range - Format "min, max"'])
+#             except:
+#                 return render_template("mergegenerate.html", sort = [], genlst = ['Invalid Input - Amount Format "num" - Range Format "min, max"'])
+#         else:
+#                 return render_template("mergegenerate.html", sort = [], genlst = [])
+#     else:
+#         return render_template("mergegenerate.html", sort = [], genlst = [])
 #
 #
-# @app.route('/bubble/file', methods=['POST', 'GET'])
-# def bubblefile():
+# @app.route('/merge/file', methods=['POST', 'GET'])
+# def mergeefile():
 #     if request.method == 'POST':
 #         filecont = request.form['filepath']
 #         dir = request.form['updown']
@@ -299,29 +422,29 @@ def mergegnerate():
 #                         data[i] = int(data[i])
 #                     if str(dir) == "Ascending":
 #                         strt = time.time()
-#                         srt, cmps = bubbleSort(data)
+#                         srt, cmps = mergeSort(data)
 #                         end = time.time()
 #                     else:
 #                         strt = time.time()
-#                         srt, cmps = bubbleSortRev(data)
+#                         srt, cmps = mergeSortRev(data)
 #                         end = time.time()
 #                     tkn = end-strt
 #                     if str(tkn) == "0.0":
 #                         tkn = "Negligible"
-#                     return render_template("bubblefile.html", cont=data, sort=srt, compars = cmps, time = tkn)
+#                     return render_template("mergeefile.html", cont=data, sort=srt, compars = cmps, time = tkn)
 #                 else:
-#                     return render_template("bubblefile.html", cont=['Invalid Data'], sort = [])
+#                     return render_template("mergeefile.html", cont=['Invalid Data'], sort = [])
 #             else:
-#                 return render_template("bubblefile.html", cont=['Invalid Path'], sort = [])
+#                 return render_template("mergeefile.html", cont=['Invalid Path'], sort = [])
 #         else:
-#             return render_template("bubblefile.html", cont=['File must be .csv'], sort = [])
-#     return render_template("bubblefile.html", cont=[], sort = [])
+#             return render_template("mergeefile.html", cont=['File must be .csv'], sort = [])
+#     return render_template("mergeefile.html", cont=[], sort = [])
 #
-# @app.route('/bubble/explan')
-# def bubbleexplan():
-#     return render_template("bubbleexpl.html")
+# @app.route('/merge/explan')
+# def mergeexplan():
+#     return render_template("mergeexpl.html")
 #
 #
-# @app.route('/bubble/comps')
-# def bubblecomps():
-#     return render_template("bubblecomps.html")
+# @app.route('/merge/comps')
+# def mergecomps():
+#     return render_template("mergecomps.html")
