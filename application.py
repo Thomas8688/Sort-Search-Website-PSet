@@ -97,8 +97,9 @@ def linearSearch(lst, searchItem):
         comps += 1
         if lst[count] == searchItem:
             found = True
+            return found, comps, count
         count += 1
-    return found, comps
+    return found, comps, count
 
 
 
@@ -207,7 +208,7 @@ def bubblefile():
                     tkn = end-strt
                     if str(tkn) == "0.0":
                         tkn = "Negligible"
-                    return render_template("bubblefile.html", cont=data, sort=srt, compars = cmps, time = tkn)
+                    return render_template("bubblefile.html", cont=data, sort=srt, compars=cmps, time=tkn)
                 else:
                     return render_template("bubblefile.html", cont=['Invalid Data'], sort = [])
             else:
@@ -334,6 +335,7 @@ def mergeefile():
             return render_template("mergeefile.html", cont=['File must be .csv'], sort = [])
     return render_template("mergeefile.html", cont=[], sort = [])
 
+
 @app.route('/merge/explan')
 def mergeexplan():
     return render_template("mergeexpl.html")
@@ -343,12 +345,13 @@ def mergeexplan():
 def mergecomps():
     return render_template("mergecomps.html")
 
+
 @app.route('/linear/enter', methods=['POST', 'GET'])
 def linearenter():
     if request.method == 'POST':
         nums = request.form['numbers']
         src = request.form['search']
-        if nums and search:
+        if nums and src:
             lst = nums.split(",")
             while lst[-1] in [",", ""]:
                 lst.pop(-1)
@@ -356,12 +359,15 @@ def linearenter():
                 for i in range(len(lst)):
                     lst[i] = int(lst[i])
                 strt = time.time()
-                srt, cmps = linearSearch(lst, int(src))
+                srt, cmps, ind = linearSearch(lst, int(src))
                 end = time.time()
                 tkn = end-strt
                 if str(tkn) == "0.0":
                     tkn = "Negligible"
-                return render_template("linearenter.html", found = srt, search = src, unsorted = lst, compars = cmps, time = tkn)
+                if srt:
+                    return render_template("lineargen.html", found = srt, searchItem = str(src), index = ind, genlst = lst, compars = cmps, time = tkn)
+                else:
+                    return render_template("lineargen.html", found = srt, searchItem = str(src), index = "-", genlst = lst, compars = cmps, time = tkn)
             else:
                 return render_template("linearenter.html", unsorted = ['Invalid List - List Format CSN'])
         else:
@@ -369,69 +375,47 @@ def linearenter():
     else:
         return render_template("linearenter.html", unsorted = [])
 
-# @app.route('/linear/generate', methods=['POST', 'GET'])
-# def lineargen():
-#     if request.method == 'POST':
-#         amnt = request.form['amount']
-#         rng = request.form['range']
-#         src = request.form['search']
-#         if nums:
-#             lst = nums.split(",")
-#             while lst[-1] in [",", ""]:
-#                 lst.pop(-1)
-#             if validate(lst):
-#                 for i in range(len(lst)):
-#                     lst[i] = int(lst[i])
-#                 strt = time.time()
-#                 srt, cmps = linearSearch(lst, int(src))
-#                 end = time.time()
-#                 tkn = end-strt
-#                 if str(tkn) == "0.0":
-#                     tkn = "Negligible"
-#                 return render_template("linearenter.html", found = srt, search = src, unsorted = lst, compars = cmps, time = tkn)
-#             else:
-#                 return render_template("linearenter.html", unsorted = ['Invalid List - List Format CSN'])
-#         else:
-#             return render_template("linearenter.html", unsorted = [])
-#     else:
-#         return render_template("linearenter.html", unsorted = [])
 
 @app.route('/linear/generate', methods=['POST', 'GET'])
 def lineargenerate():
     if request.method == 'POST':
         amount = request.form['amount']
         rnge = request.form['range']
-        src = request.form['search']
+        #src = request.form['search']
         if amount and rnge:
             try:
                 num = int(amount)
                 rnge = rnge.split(",")
                 min = int(rnge[0])
                 max = int(rnge[1])
+                src = randint(min, max)
                 if len(rnge) == 2 and min < max:
                     if num > 0 and num < 10001:
                         lst = []
                         for i in range(num):
                             lst.append(randint(min, max))
                         strt = time.time()
-                        srt, cmps = linearSearch(lst, src)
+                        srt, cmps, ind = linearSearch(lst, src)
                         end = time.time()
                         tkn = end-strt
                         if str(tkn) == "0.0":
                             tkn = "Negligible"
-                        return render_template("mergegenerate.html", sort = srt, genlst = lst, compars = cmps, time = tkn)
+                        if srt:
+                            return render_template("lineargen.html", found = srt, searchItem = str(src), index = ind, genlst = lst, compars = cmps, time = tkn)
+                        else:
+                            return render_template("lineargen.html", found = srt, searchItem = str(src), index = "-", genlst = lst, compars = cmps, time = tkn)
                     else:
-                        return render_template("mergegenerate.html", sort = [], genlst = ['Amount out of Range'])
+                        return render_template("lineargen.html", genlst = ['Amount out of Range'])
                 else:
-                    return render_template("mergegenerate.html", sort = [], genlst = ['Invalid Range - Format "min, max"'])
+                    return render_template("lineargen.html", genlst = ['Invalid Range - Format "min, max"'])
             except:
-                return render_template("mergegenerate.html", sort = [], genlst = ['Invalid Input - Amount Format "num" - Range Format "min, max"'])
+                return render_template("lineargen.html", genlst = ['Invalid Input - Amount Format "num" - Range Format "min, max"'])
         else:
-                return render_template("mergegenerate.html", sort = [], genlst = [])
+                return render_template("lineargen.html", genlst = [])
     else:
-        return render_template("mergegenerate.html", sort = [], genlst = [])
-#
-#
+        return render_template("lineargen.html", genlst = [])
+
+
 # @app.route('/merge/file', methods=['POST', 'GET'])
 # def mergeefile():
 #     if request.method == 'POST':
@@ -465,12 +449,12 @@ def lineargenerate():
 #         else:
 #             return render_template("mergeefile.html", cont=['File must be .csv'], sort = [])
 #     return render_template("mergeefile.html", cont=[], sort = [])
-#
-# @app.route('/merge/explan')
-# def mergeexplan():
-#     return render_template("mergeexpl.html")
-#
-#
-# @app.route('/merge/comps')
-# def mergecomps():
-#     return render_template("mergecomps.html")
+
+@app.route('/linear/explan')
+def linearexplan():
+    return render_template("linearexpl.html")
+
+
+@app.route('/linear/comps')
+def linearcomps():
+    return render_template("linearcomps.html")
