@@ -381,7 +381,6 @@ def lineargenerate():
     if request.method == 'POST':
         amount = request.form['amount']
         rnge = request.form['range']
-        #src = request.form['search']
         if amount and rnge:
             try:
                 num = int(amount)
@@ -416,39 +415,38 @@ def lineargenerate():
         return render_template("lineargen.html", genlst = [])
 
 
-# @app.route('/merge/file', methods=['POST', 'GET'])
-# def mergeefile():
-#     if request.method == 'POST':
-#         filecont = request.form['filepath']
-#         dir = request.form['updown']
-#         type = filecont.split(".")
-#         if type[-1] == "csv":
-#             if path.exists(filecont):
-#                 with open(filecont, 'r') as file:
-#                     data = file.read().replace('\n', '')
-#                 data = data.split(",")
-#                 if validate(data):
-#                     for i in range(len(data)):
-#                         data[i] = int(data[i])
-#                     if str(dir) == "Ascending":
-#                         strt = time.time()
-#                         srt, cmps = mergeSort(data)
-#                         end = time.time()
-#                     else:
-#                         strt = time.time()
-#                         srt, cmps = mergeSortRev(data)
-#                         end = time.time()
-#                     tkn = end-strt
-#                     if str(tkn) == "0.0":
-#                         tkn = "Negligible"
-#                     return render_template("mergeefile.html", cont=data, sort=srt, compars = cmps, time = tkn)
-#                 else:
-#                     return render_template("mergeefile.html", cont=['Invalid Data'], sort = [])
-#             else:
-#                 return render_template("mergeefile.html", cont=['Invalid Path'], sort = [])
-#         else:
-#             return render_template("mergeefile.html", cont=['File must be .csv'], sort = [])
-#     return render_template("mergeefile.html", cont=[], sort = [])
+@app.route('/linear/file', methods=['POST', 'GET'])
+def linearfile():
+    if request.method == 'POST':
+        filecont = request.form['filepath']
+        src = request.form['search']
+        type = filecont.split(".")
+        if type[-1] == "csv" and src:
+            if path.exists(filecont):
+                with open(filecont, 'r') as file:
+                    data = file.read().replace('\n', '')
+                data = data.split(",")
+                if validate(data) and validate(src):
+                    for i in range(len(data)):
+                        data[i] = int(data[i])
+                    strt = time.time()
+                    src = int(src)
+                    srt, cmps, ind = linearSearch(data, src)
+                    end = time.time()
+                    tkn = end-strt
+                    if str(tkn) == "0.0":
+                        tkn = "Negligible"
+                    if srt:
+                        return render_template("linearfile.html", found = srt, searchItem = str(src), index = ind, genlst = data, compars = cmps, time = tkn)
+                    else:
+                        return render_template("linearfile.html", found = srt, searchItem = str(src), index = "-", genlst = data, compars = cmps, time = tkn)
+                else:
+                    return render_template("linearfile.html", genlst=['Invalid Data'])
+            else:
+                return render_template("linearfile.html", genlst=['Invalid Path'])
+        else:
+            return render_template("linearfile.html", genlst=['File must be .csv'])
+    return render_template("linearfile.html", genlst=[])
 
 @app.route('/linear/explan')
 def linearexplan():

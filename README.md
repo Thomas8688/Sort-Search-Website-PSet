@@ -7,3 +7,5 @@ Merge Sort
 Bubble Sort
 Linear Search
 Binary Search
+
+Within each of these aspects, we were also required to implement additional features which can be found in the attached word document.
