@@ -3,6 +3,7 @@ from random import randint
 from os import path
 import time
 
+
 def bubbleSort(lst):
     lst = [int(x) for x in lst]
     comps = 0
@@ -42,51 +43,47 @@ def validate(lst):
             valid = False
     return valid
 
-def sort(lstA, lstB):
-    returnLst = []
-    comps = 0
+def merge(lstA, lstB):
+    comb = []
     while lstA and lstB:
-        comps += 1
-        if lstA[0] < lstB[0]:
-            returnLst.append(lstA.pop(0))
+        if lstA[0] > lstB[0]:
+            comb.append(lstB.pop(0))
         else:
-            returnLst.append(lstB.pop(0))
-    return returnLst + lstA + lstB, comps
+            comb.append(lstA.pop(0))
+    return comb + lstA + lstB
 
 def mergeSort(lst):
-    split = [[int(num)] for num in lst]
-    comps = 0
-    while len(split) != 1:
-        i = 0
-        while i < len(split)-1:
-            sorted, adder = sort(split[i], split.pop(i+1))
-            split[i] = sorted
-            comps += adder
-            i += 1
-    return split[0], comps
+    if len(lst) <= 1:
+        return lst, 0
+    else:
+        comps = 0
+        midIndex = len(lst) // 2
+        left, cmps = mergeSort(lst[:midIndex])
+        right, cmps2 = mergeSort(lst[midIndex:])
+        merged = merge(left, right)
+        comps += cmps + cmps2 + 1
+    return merged, comps
 
-def sortRev(lstA, lstB):
-    returnLst = []
-    comps = 0
+def mergeRev(lstA, lstB):
+    comb = []
     while lstA and lstB:
-        comps += 1
-        if lstA[0] > lstB[0]:
-            returnLst.append(lstA.pop(0))
+        if lstA[0] < lstB[0]:
+            comb.append(lstB.pop(0))
         else:
-            returnLst.append(lstB.pop(0))
-    return returnLst + lstA + lstB, comps
+            comb.append(lstA.pop(0))
+    return comb + lstA + lstB
 
 def mergeSortRev(lst):
-    split = [[int(num)] for num in lst]
-    comps = 0
-    while len(split) != 1:
-        i = 0
-        while i < len(split)-1:
-            sorted, adder = sortRev(split[i], split.pop(i+1))
-            comps += adder
-            split[i] = sorted
-            i += 1
-    return split[0], comps
+    if len(lst) <= 1:
+        return lst, 0
+    else:
+        comps = 0
+        midIndex = len(lst) // 2
+        left, cmps = mergeSortRev(lst[:midIndex])
+        right, cmps2 = mergeSortRev(lst[midIndex:])
+        merged = mergeRev(left, right)
+        comps += cmps + cmps2 + 1
+    return merged, comps
 
 def linearSearch(lst, searchItem):
     lst = [int(num) for num in lst]
@@ -104,6 +101,8 @@ def linearSearch(lst, searchItem):
 
 
 app = Flask(__name__)
+
+FOLDER = path.join(app.root_path, "uploads")
 
 @app.route('/')
 def home():
@@ -183,9 +182,6 @@ def bubblegnerate():
         return render_template("bubblegenerate.html", sort = [], genlst = [])
 
 
-
-FOLDER = path.join(app.root_path, "uploads")
-
 print(FOLDER)
 @app.route('/bubble/file', methods=['POST', 'GET'])
 def bubblefile():
@@ -197,7 +193,8 @@ def bubblefile():
             dir = request.form['updown']
             type = filecont.filename.split(".")
             if type[-1] == "csv":
-                filecont.save(newPath)
+                if not path.exists(newPath):
+                    filecont.save(newPath)
                 with open(newPath, 'r') as file:
                     data = file.read().replace('\n', '')
                 data = data.split(",")
@@ -215,12 +212,12 @@ def bubblefile():
                     tkn = end-strt
                     if str(tkn) == "0.0":
                         tkn = "Negligible"
-                    return render_template("bubblefile.html", cont=data, sort=srt, compars=cmps, time=tkn, flnm = filecont.filename)
+                    return render_template("bubblefile.html", cont=data, sort=srt, compars=cmps, time=tkn)
                 else:
-                    return render_template("bubblefile.html", cont=['Invalid Path'], sort = [], flnm = "select file")
+                    return render_template("bubblefile.html", cont=['Invalid Path'], sort = [])
             else:
-                return render_template("bubblefile.html", cont=['File must be .csv'], sort = [], flnm = "select file")
-    return render_template("bubblefile.html", cont=[], sort = [], flnm = "select file")
+                return render_template("bubblefile.html", cont=['File must be .csv'], sort = [])
+    return render_template("bubblefile.html", cont=[], sort = [])
 
 # @app.route('/bubble/file', methods=['POST', 'GET'])
 # def bubblefile():
@@ -280,16 +277,16 @@ def mergeenter():
                     lst[i] = int(lst[i])
                 if str(dir) == "Ascending":
                     strt = time.time()
-                    srt, cmps = mergeSort(lst)
+                    srt, cmp = mergeSort(lst)
                     end = time.time()
                 else:
                     strt = time.time()
-                    srt, cmps = mergeSortRev(lst)
+                    srt, cmp = mergeSortRev(lst)
                     end = time.time()
                 tkn = end-strt
                 if str(tkn) == "0.0":
                     tkn = "Negligible"
-                return render_template("mergeenter.html", sorted = srt, unsorted = lst, compars = cmps, time = tkn)
+                return render_template("mergeenter.html", sorted = srt, unsorted = lst, time = tkn, compars = cmp)
             else:
                 return render_template("mergeenter.html", sorted = [], unsorted = ['Invalid List - List Format CSN'])
         else:
@@ -342,13 +339,15 @@ def mergegnerate():
 @app.route('/merge/file', methods=['POST', 'GET'])
 def mergeefile():
     if request.method == 'POST':
-        filecont = request.form['filepath']
+        filecont = request.files['theFile']
         dir = request.form['updown']
-        if filecont:
-            type = filecont.split(".")
-        if filecont and type[-1] == "csv":
-            if path.exists(filecont):
-                with open(filecont, 'r') as file:
+        if filecont and dir:
+            newPath = path.join(FOLDER, filecont.filename)
+            type = filecont.filename.split(".")
+            if type[-1] == "csv":
+                if not path.exists(newPath):
+                    filecont.save(newPath)
+                with open(newPath, 'r') as file:
                     data = file.read().replace('\n', '')
                 data = data.split(",")
                 if validate(data):
@@ -365,14 +364,13 @@ def mergeefile():
                     tkn = end-strt
                     if str(tkn) == "0.0":
                         tkn = "Negligible"
-                    return render_template("mergeefile.html", cont=data, sort=srt, compars = cmps, time = tkn)
+                    return render_template("mergeefile.html", cont=data, sort=srt, compars=cmps, time=tkn)
                 else:
-                    return render_template("mergeefile.html", cont=['Invalid Data'], sort = [])
+                    return render_template("mergeefile.html", cont=['Invalid Path'], sort = [])
             else:
-                return render_template("mergeefile.html", cont=['Invalid Path'], sort = [])
-        else:
-            return render_template("mergeefile.html", cont=['File must be .csv'], sort = [])
+                return render_template("mergeefile.html", cont=['File must be .csv'], sort = [])
     return render_template("mergeefile.html", cont=[], sort = [])
+
 
 
 @app.route('/merge/explan')
@@ -457,19 +455,25 @@ def lineargenerate():
 @app.route('/linear/file', methods=['POST', 'GET'])
 def linearfile():
     if request.method == 'POST':
-        filecont = request.form['filepath']
+        filecont = request.files['theFile']
         src = request.form['search']
-        type = filecont.split(".")
-        if type[-1] == "csv" and src:
-            if path.exists(filecont):
-                with open(filecont, 'r') as file:
+        if filecont and src:
+            try:
+                src = int(src)
+            except:
+                return render_template("linearfile.html", cont=['Search Item must be a number'], sort = [])
+            newPath = path.join(FOLDER, filecont.filename)
+            type = filecont.filename.split(".")
+            if type[-1] == "csv":
+                if not path.exists(newPath):
+                    filecont.save(newPath)
+                with open(newPath, 'r') as file:
                     data = file.read().replace('\n', '')
                 data = data.split(",")
-                if validate(data) and validate(src):
+                if validate(data):
                     for i in range(len(data)):
                         data[i] = int(data[i])
                     strt = time.time()
-                    src = int(src)
                     srt, cmps, ind = linearSearch(data, src)
                     end = time.time()
                     tkn = end-strt
@@ -480,12 +484,10 @@ def linearfile():
                     else:
                         return render_template("linearfile.html", found = srt, searchItem = str(src), index = "-", genlst = data, compars = cmps, time = tkn)
                 else:
-                    return render_template("linearfile.html", genlst=['Invalid Data'])
+                    return render_template("linearfile.html", cont=['Invalid Path'], sort = [])
             else:
-                return render_template("linearfile.html", genlst=['Invalid Path'])
-        else:
-            return render_template("linearfile.html", genlst=['File must be .csv'])
-    return render_template("linearfile.html", genlst=[])
+                return render_template("linearfile.html", cont=['File must be .csv'], sort = [])
+    return render_template("linearfile.html", cont=[], sort = [])
 
 @app.route('/linear/explan')
 def linearexplan():

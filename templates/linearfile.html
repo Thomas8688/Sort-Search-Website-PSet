@@ -23,10 +23,13 @@
 <br>
 <h5 class="text-center">Enter File Path and Search Item</h5>
 <br>
-<form action ="/linear/file" method="POST">
+<form action ="/linear/file" method="POST" enctype="multipart/form-data">
     <div class="input-group input-groupt-lg center">
-        <input type="text" placeholder="file path" aria-label="path" class="form-control" name="filepath" id="filepath">
         <input type="text" placeholder="search item" aria-label="range" class="form-control" name="search" id="search">
+        <div class="custom-file">
+            <input type="file" class="custom-file-input" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" name="theFile" id="theFile">
+            <label class="custom-file-label" for="inputGroupFile04">select file</label>
+        </div>
         <div class="input-group-append">
             <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
         </div>
