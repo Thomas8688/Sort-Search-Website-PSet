@@ -22,7 +22,7 @@
 <br>
 <h5 class="text-center">Enter File Path</h5>
 <br>
-<form action ="/bubble/file" method="POST">
+<form action ="/bubble/file" method="POST" enctype="multipart/form-data">
     <div class="form-group form-groupt-lg btncenter">
         <select class="btn-outline-secondary form-control" name="updown" id="updown">
             <option>Ascending</option>
@@ -30,10 +30,13 @@
         </select>
     </div>
     <br>
-    <div class="input-group input-groupt-lg center">
-        <input type="text" class="form-control" placeholder="file path" aria-label="file path" aria-describedby="button-addon2" name="filepath" id="filepath">
+    <div class="input-group center">
+        <div class="custom-file">
+            <input type="file" class="custom-file-input" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" name="theFile" id="theFile">
+            <label class="custom-file-label" for="inputGroupFile04">{{flnm}}</label>
+        </div>
         <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Sort</button>
+            <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04">Sort</button>
         </div>
     </div>
 </form>

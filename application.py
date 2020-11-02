@@ -183,15 +183,22 @@ def bubblegnerate():
         return render_template("bubblegenerate.html", sort = [], genlst = [])
 
 
+
+FOLDER = path.join(app.root_path, "uploads")
+
+print(FOLDER)
 @app.route('/bubble/file', methods=['POST', 'GET'])
 def bubblefile():
     if request.method == 'POST':
-        filecont = request.form['filepath']
+        filecont = request.files['theFile']
         dir = request.form['updown']
-        type = filecont.split(".")
-        if type[-1] == "csv":
-            if path.exists(filecont):
-                with open(filecont, 'r') as file:
+        if filecont and dir:
+            newPath = path.join(FOLDER, filecont.filename)
+            dir = request.form['updown']
+            type = filecont.filename.split(".")
+            if type[-1] == "csv":
+                filecont.save(newPath)
+                with open(newPath, 'r') as file:
                     data = file.read().replace('\n', '')
                 data = data.split(",")
                 if validate(data):
@@ -208,14 +215,46 @@ def bubblefile():
                     tkn = end-strt
                     if str(tkn) == "0.0":
                         tkn = "Negligible"
-                    return render_template("bubblefile.html", cont=data, sort=srt, compars=cmps, time=tkn)
+                    return render_template("bubblefile.html", cont=data, sort=srt, compars=cmps, time=tkn, flnm = filecont.filename)
                 else:
-                    return render_template("bubblefile.html", cont=['Invalid Data'], sort = [])
+                    return render_template("bubblefile.html", cont=['Invalid Path'], sort = [], flnm = "select file")
             else:
-                return render_template("bubblefile.html", cont=['Invalid Path'], sort = [])
-        else:
-            return render_template("bubblefile.html", cont=['File must be .csv'], sort = [])
-    return render_template("bubblefile.html", cont=[], sort = [])
+                return render_template("bubblefile.html", cont=['File must be .csv'], sort = [], flnm = "select file")
+    return render_template("bubblefile.html", cont=[], sort = [], flnm = "select file")
+
+# @app.route('/bubble/file', methods=['POST', 'GET'])
+# def bubblefile():
+#     if request.method == 'POST':
+#         filecont = request.form['filepath']
+#         dir = request.form['updown']
+#         type = filecont.split(".")
+#         if type[-1] == "csv":
+#             if path.exists(filecont):
+#                 with open(filecont, 'r') as file:
+#                     data = file.read().replace('\n', '')
+#                 data = data.split(",")
+#                 if validate(data):
+#                     for i in range(len(data)):
+#                         data[i] = int(data[i])
+#                     if str(dir) == "Ascending":
+#                         strt = time.time()
+#                         srt, cmps = bubbleSort(data)
+#                         end = time.time()
+#                     else:
+#                         strt = time.time()
+#                         srt, cmps = bubbleSortRev(data)
+#                         end = time.time()
+#                     tkn = end-strt
+#                     if str(tkn) == "0.0":
+#                         tkn = "Negligible"
+#                     return render_template("bubblefile.html", cont=data, sort=srt, compars=cmps, time=tkn)
+#                 else:
+#                     return render_template("bubblefile.html", cont=['Invalid Data'], sort = [])
+#             else:
+#                 return render_template("bubblefile.html", cont=['Invalid Path'], sort = [])
+#         else:
+#             return render_template("bubblefile.html", cont=['File must be .csv'], sort = [])
+#     return render_template("bubblefile.html", cont=[], sort = [])
 
 @app.route('/bubble/explan')
 def bubbleexplan():
