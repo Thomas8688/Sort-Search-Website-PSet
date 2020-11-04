@@ -17,23 +17,26 @@
 {% endblock %}
 
 {% block body %}
-<h3 class="text-center">Linear Search</h3>
+<h3 class="text-center">Binary Search</h3>
 <br>
 <h4 class="text-center">Algorithm in Action</h4>
 <br>
-<h5 class="text-center">Enter List and Search Item</h5>
+<h5 class="text-center">Enter File Path and Search Item</h5>
 <br>
-<form action ="/linear/enter" method="POST">
+<form action ="/binary/file" method="POST" enctype="multipart/form-data">
     <div class="input-group input-groupt-lg center">
-        <input type="text" placeholder="list of numbers" aria-label="list" class="form-control" name="numbers" id="numbers">
-        <input type="text" placeholder="search item" aria-label="search" class="form-control" name="search" id="search">
+        <input type="text" placeholder="search item" aria-label="range" class="form-control" name="search" id="search">
+        <div class="custom-file">
+            <input type="file" class="custom-file-input" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" name="theFile" id="theFile">
+            <label class="custom-file-label" for="inputGroupFile04">select file</label>
+        </div>
         <div class="input-group-append">
             <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
         </div>
     </div>
 </form>
 <br>
-<p class="text-center">List: <b>{{genlst}}</b></p>
+<p class="text-center">File Content: <b>{{genlst}}</b></p>
 <p class="text-center">Search Item: <b>{{searchItem}}</b></p>
 <p class="text-center">Found: <b>{{found}}</b></p>
 <p class="text-center">Index (Starting at 0): <b>{{index}}</b></p>

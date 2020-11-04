@@ -98,7 +98,30 @@ def linearSearch(lst, searchItem):
         count += 1
     return found, comps, count
 
+def binarySearch(lst, min, max, searchItem):
+    comps = 0
+    if min <= max:
+        midPoint = (min + max) // 2
+        comps += 1
+        if lst[midPoint] == searchItem:
+            return True, midPoint, comps
+        elif lst[midPoint] > searchItem:
+            srt, ind, cmps =  binarySearch(lst, min, midPoint-1, searchItem)
+            comps += cmps
+            return srt, ind, comps
+        else:
+            srt, ind, cmps = binarySearch(lst, midPoint+1, max, searchItem)
+            comps += cmps
+            return srt, ind, comps
+    else:
+        return False, -1, comps
 
+def inOrder(lst):
+    order = True
+    for i in range(len(lst)-1):
+        if lst[i] > lst[i+1]:
+            order = False
+    return order
 
 app = Flask(__name__)
 
@@ -182,7 +205,6 @@ def bubblegnerate():
         return render_template("bubblegenerate.html", sort = [], genlst = [])
 
 
-print(FOLDER)
 @app.route('/bubble/file', methods=['POST', 'GET'])
 def bubblefile():
     if request.method == 'POST':
@@ -219,39 +241,6 @@ def bubblefile():
                 return render_template("bubblefile.html", cont=['File must be .csv'], sort = [])
     return render_template("bubblefile.html", cont=[], sort = [])
 
-# @app.route('/bubble/file', methods=['POST', 'GET'])
-# def bubblefile():
-#     if request.method == 'POST':
-#         filecont = request.form['filepath']
-#         dir = request.form['updown']
-#         type = filecont.split(".")
-#         if type[-1] == "csv":
-#             if path.exists(filecont):
-#                 with open(filecont, 'r') as file:
-#                     data = file.read().replace('\n', '')
-#                 data = data.split(",")
-#                 if validate(data):
-#                     for i in range(len(data)):
-#                         data[i] = int(data[i])
-#                     if str(dir) == "Ascending":
-#                         strt = time.time()
-#                         srt, cmps = bubbleSort(data)
-#                         end = time.time()
-#                     else:
-#                         strt = time.time()
-#                         srt, cmps = bubbleSortRev(data)
-#                         end = time.time()
-#                     tkn = end-strt
-#                     if str(tkn) == "0.0":
-#                         tkn = "Negligible"
-#                     return render_template("bubblefile.html", cont=data, sort=srt, compars=cmps, time=tkn)
-#                 else:
-#                     return render_template("bubblefile.html", cont=['Invalid Data'], sort = [])
-#             else:
-#                 return render_template("bubblefile.html", cont=['Invalid Path'], sort = [])
-#         else:
-#             return render_template("bubblefile.html", cont=['File must be .csv'], sort = [])
-#     return render_template("bubblefile.html", cont=[], sort = [])
 
 @app.route('/bubble/explan')
 def bubbleexplan():
@@ -402,15 +391,15 @@ def linearenter():
                 if str(tkn) == "0.0":
                     tkn = "Negligible"
                 if srt:
-                    return render_template("lineargen.html", found = srt, searchItem = str(src), index = ind, genlst = lst, compars = cmps, time = tkn)
+                    return render_template("linearenter.html", found = srt, searchItem = str(src), index = ind, genlst = lst, compars = cmps, time = tkn)
                 else:
-                    return render_template("lineargen.html", found = srt, searchItem = str(src), index = "-", genlst = lst, compars = cmps, time = tkn)
+                    return render_template("linearenter.html", found = srt, searchItem = str(src), index = "-", genlst = lst, compars = cmps, time = tkn)
             else:
-                return render_template("linearenter.html", unsorted = ['Invalid List - List Format CSN'])
+                return render_template("linearenter.html", genlst = ['Invalid List - List Format CSN'])
         else:
-            return render_template("linearenter.html", unsorted = [])
+            return render_template("linearenter.html", genlst = [])
     else:
-        return render_template("linearenter.html", unsorted = [])
+        return render_template("linearenter.html", genlst = [])
 
 
 @app.route('/linear/generate', methods=['POST', 'GET'])
@@ -484,10 +473,10 @@ def linearfile():
                     else:
                         return render_template("linearfile.html", found = srt, searchItem = str(src), index = "-", genlst = data, compars = cmps, time = tkn)
                 else:
-                    return render_template("linearfile.html", cont=['Invalid Path'], sort = [])
+                    return render_template("linearfile.html", genlst = ['Invalid Content - Must be CSN'])
             else:
-                return render_template("linearfile.html", cont=['File must be .csv'], sort = [])
-    return render_template("linearfile.html", cont=[], sort = [])
+                return render_template("linearfile.html", genlst = ['File must be .csv'])
+    return render_template("linearfile.html", genlst = [])
 
 @app.route('/linear/explan')
 def linearexplan():
@@ -497,3 +486,126 @@ def linearexplan():
 @app.route('/linear/comps')
 def linearcomps():
     return render_template("linearcomps.html")
+
+
+@app.route('/binary/enter', methods=['POST', 'GET'])
+def binaryenter():
+    if request.method == 'POST':
+        nums = request.form['numbers']
+        src = request.form['search']
+        if nums and src:
+            lst = nums.split(",")
+            while lst[-1] in [",", ""]:
+                lst.pop(-1)
+            if validate(lst):
+                for i in range(len(lst)):
+                    lst[i] = int(lst[i])
+                if inOrder(lst):
+                    strt = time.time()
+                    srt, ind, cmps = binarySearch(lst, 0, len(lst)-1, int(src))
+                    end = time.time()
+                    tkn = end-strt
+                    if str(tkn) == "0.0":
+                        tkn = "Negligible"
+                    if srt:
+                        return render_template("binaryenter.html", found = srt, searchItem = str(src), index = ind, genlst = lst, compars = cmps, time = tkn)
+                    else:
+                        return render_template("binaryenter.htmll", found = srt, searchItem = str(src), index = "-", genlst = lst, compars = cmps, time = tkn)
+                else:
+                    return render_template("binaryenter.html", genlst = ['Invalid List - Must be Sorted'])
+            else:
+                return render_template("binaryenter.html", genlst = ['Invalid List - List Format CSN'])
+        else:
+            return render_template("binaryenter.html", genlst = [])
+    else:
+        return render_template("binaryenter.html", genlst = [])
+
+
+@app.route('/binary/generate', methods=['POST', 'GET'])
+def binarygenerate():
+    if request.method == 'POST':
+        amount = request.form['amount']
+        rnge = request.form['range']
+        if amount and rnge:
+            try:
+                num = int(amount)
+                rnge = rnge.split(",")
+                min = int(rnge[0])
+                max = int(rnge[1])
+                src = randint(min, max)
+                if len(rnge) == 2 and min < max:
+                    if num > 0 and num < 10001:
+                        lst = []
+                        for i in range(num):
+                            lst.append(randint(min, max))
+                        lst = mergeSort(lst)[0]
+                        strt = time.time()
+                        srt, ind, cmps = binarySearch(lst, 0, len(lst)-1, int(src))
+                        end = time.time()
+                        tkn = end-strt
+                        if str(tkn) == "0.0":
+                            tkn = "Negligible"
+                        if srt:
+                            return render_template("binarygen.html", found = srt, searchItem = str(src), index = ind, genlst = lst, compars = cmps, time = tkn)
+                        else:
+                            return render_template("binarygen.html", found = srt, searchItem = str(src), index = "-", genlst = lst, compars = cmps, time = tkn)
+                    else:
+                        return render_template("binarygen.html", genlst = ['Amount out of Range'])
+                else:
+                    return render_template("binarygen.html", genlst = ['Invalid Range - Format "min, max"'])
+            except:
+                return render_template("binarygen.html", genlst = ['Invalid Input - Amount Format "num" - Range Format "min, max"'])
+        else:
+                return render_template("binarygen.html", genlst = [])
+    else:
+        return render_template("binarygen.html", genlst = [])
+
+
+@app.route('/binary/file', methods=['POST', 'GET'])
+def binaryfile():
+    if request.method == 'POST':
+        filecont = request.files['theFile']
+        src = request.form['search']
+        if filecont and src:
+            try:
+                src = int(src)
+            except:
+                return render_template("linearfile.html", cont=['Search Item must be a number'], sort = [])
+            newPath = path.join(FOLDER, filecont.filename)
+            type = filecont.filename.split(".")
+            if type[-1] == "csv":
+                if not path.exists(newPath):
+                    filecont.save(newPath)
+                with open(newPath, 'r') as file:
+                    data = file.read().replace('\n', '')
+                data = data.split(",")
+                if validate(data):
+                    for i in range(len(data)):
+                        data[i] = int(data[i])
+                    if inOrder(data):
+                        strt = time.time()
+                        srt, ind, cmps = binarySearch(lst, 0, len(lst)-1, src)
+                        end = time.time()
+                        tkn = end-strt
+                        if str(tkn) == "0.0":
+                            tkn = "Negligible"
+                        if srt:
+                            return render_template("binaryfile.html", found = srt, searchItem = str(src), index = ind, genlst = data, compars = cmps, time = tkn)
+                        else:
+                            return render_template("binaryfile.html", found = srt, searchItem = str(src), index = "-", genlst = data, compars = cmps, time = tkn)
+                    else:
+                        return render_template("binaryfile.html", genlst=['Invalid Content - Must be sorted'])
+                else:
+                    return render_template("binaryfile.html", genlst=['Invalid Content - Must be CSN'])
+            else:
+                return render_template("binaryfile.html", genlst=['File must be .csv'])
+    return render_template("binaryfile.html", genlst=[])
+
+@app.route('/binary/explan')
+def binaryexplan():
+    return render_template("binaryexpl.html")
+
+
+@app.route('/binary/comps')
+def binarycomps():
+    return render_template("binarycomps.html")
