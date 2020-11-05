@@ -584,7 +584,7 @@ def binaryfile():
                         data[i] = int(data[i])
                     if inOrder(data):
                         strt = time.time()
-                        srt, ind, cmps = binarySearch(lst, 0, len(lst)-1, src)
+                        srt, ind, cmps = binarySearch(data, 0, len(data)-1, src)
                         end = time.time()
                         tkn = end-strt
                         if str(tkn) == "0.0":
