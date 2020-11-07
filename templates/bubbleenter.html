@@ -1,6 +1,8 @@
+<!-- Bubble Enter Page - Extended from base.html  -->
 {% extends 'base.html' %}
 
 {% block head %}
+<!-- Title of page -->
 <title>SearchSort</title>
 <style>
 .center {
@@ -17,13 +19,17 @@
 {% endblock %}
 
 {% block body %}
+<!-- Header -->
 <h3 class="text-center">Bubble Sort</h3>
 <br>
+<!-- Sub-headers -->
 <h4 class="text-center">Algorithm in Action</h4>
 <br>
 <h5 class="text-center">Enter List</h5>
 <br>
+<!-- Form to interact with application.py -->
 <form action ="/bubble/enter" method="POST">
+<!-- Button used to determine direction -->
     <div class="form-group form-groupt-lg btncenter">
         <select class="btn-outline-secondary form-control" name="updown" id="updown">
             <option>Ascending</option>
@@ -39,6 +45,7 @@
     </div>
 </form>
 <br>
+<!-- Display of values obtained in application.py -->
 <p class="text-center">Unsorted List: <b>{{unsorted}}</b></p>
 <p class="text-center">Sorted List: <b>{{sorted}}</b></p>
 <p class="text-center">Time Taken (Seconds): <b>{{time}}</b></p>

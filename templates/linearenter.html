@@ -1,6 +1,8 @@
+<!-- Linear Enter Page - Extended from base.html  -->
 {% extends 'base.html' %}
 
 {% block head %}
+<!-- Title of page -->
 <title>SearchSort</title>
 <style>
 .center {
@@ -17,12 +19,15 @@
 {% endblock %}
 
 {% block body %}
+<!-- Header -->
 <h3 class="text-center">Linear Search</h3>
 <br>
+<!-- Sub-headers -->
 <h4 class="text-center">Algorithm in Action</h4>
 <br>
 <h5 class="text-center">Enter List and Search Item</h5>
 <br>
+<!-- Form to interact with application.py -->
 <form action ="/linear/enter" method="POST">
     <div class="input-group input-groupt-lg center">
         <input type="text" placeholder="list of numbers" aria-label="list" class="form-control" name="numbers" id="numbers">
@@ -33,6 +38,7 @@
     </div>
 </form>
 <br>
+<!-- Display of values obtained in application.py using Jinja -->
 <p class="text-center">List: <b>{{genlst}}</b></p>
 <p class="text-center">Search Item: <b>{{searchItem}}</b></p>
 <p class="text-center">Found: <b>{{found}}</b></p>

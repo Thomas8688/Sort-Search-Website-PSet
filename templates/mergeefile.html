@@ -1,6 +1,8 @@
+<!-- Merge File Page - Extended from base.html  -->
 {% extends 'base.html' %}
 
 {% block head %}
+<!-- Title of page -->
 <title>SearchSort</title>
 <style>
 .center {
@@ -16,13 +18,17 @@
 {% endblock %}
 
 {% block body %}
+<!-- Header -->
 <h3 class="text-center">Merge Sort</h3>
 <br>
+<!-- Sub-headers -->
 <h4 class="text-center">Algorithm in Action</h4>
 <br>
 <h5 class="text-center">Enter File Path</h5>
 <br>
+<!-- Form used to interact with application.py -->
 <form action ="/merge/file" method="POST" enctype="multipart/form-data">
+<!-- Button used to determine direction -->
     <div class="form-group form-groupt-lg btncenter">
         <select class="btn-outline-secondary form-control" name="updown" id="updown">
             <option>Ascending</option>
@@ -30,6 +36,7 @@
         </select>
     </div>
     <br>
+<!-- Used to take a file as input -->
     <div class="input-group center">
         <div class="custom-file">
             <input type="file" class="custom-file-input" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" name="theFile" id="theFile">
@@ -41,6 +48,7 @@
     </div>
 </form>
 <br>
+<!-- Jinja used to display values obtained from application.py -->
 <p class="text-center">File Content: <b>{{cont}}</b></p>
 <p class="text-center">Sorted List: <b>{{sort}}</b></p>
 <p class="text-center">Time Taken (Seconds): <b>{{time}}</b></p>
