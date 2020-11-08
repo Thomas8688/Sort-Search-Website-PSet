@@ -682,7 +682,7 @@ def linearfile():
             try:
                 src = int(src)
             except:
-                return render_template("linearfile.html", cont=['Search Item must be a number'], sort = [])
+                return render_template("linearfile.html", genlst=['Search Item must be a number'])
 #Sets the filepath for the input file
             newPath = path.join(FOLDER, filecont.filename)
 #Splits the filepath to validate file type
@@ -697,7 +697,7 @@ def linearfile():
                     data = file.read().replace('\n', '')
                 data = data.split(",")
 #Read list and search item validated using the validate() function
-                if validate(data) and validate(src):
+                if validate(data) and validate(str(src)):
                     for i in range(len(data)):
                         data[i] = int(data[i])
 #Time module used to determine the start and end time of the function
@@ -861,7 +861,7 @@ def binaryfile():
             try:
                 src = int(src)
             except:
-                return render_template("linearfile.html", cont=['Search Item must be a number'], sort = [])
+                return render_template("binaryfile.html", genlst=['Search Item must be a number'])
 #The filepath is set for the new file
             newPath = path.join(FOLDER, filecont.filename)
 #The filepath is split in order for the file type to be validated
@@ -875,7 +875,7 @@ def binaryfile():
                     data = file.read().replace('\n', '')
                 data = data.split(",")
 #The data and search item are validated
-                if validate(data) and validate(src):
+                if validate(data) and validate(str(src)):
 #Each item in the list is converted into an integer
                     for i in range(len(data)):
                         data[i] = int(data[i])
@@ -898,7 +898,7 @@ def binaryfile():
                             return render_template("binaryfile.html", found = srt, searchItem = str(src), index = "-", genlst = data, compars = cmps, time = tkn)
 #If an error is raised at any point throughout the function, the html template is returned with an appropriate message
                     else:
-                        return render_template("binaryfile.html", genlst=['Invalid Content - Must be sorted'])
+                        return render_template("binaryfile.html", genlst=['Invalid Content'])
                 else:
                     return render_template("binaryfile.html", genlst=['Invalid Content - Must be CSN'])
             else:
