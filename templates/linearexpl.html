@@ -6,9 +6,16 @@
 <title>SearchSort</title>
 <style>
 .center {
-    margin: auto;
-    width: 60%;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    width: 30%;
     }
+
+.textcenter {
+  margin: auto;
+  width: 60%;
+}
 
 </style>
 
@@ -20,4 +27,12 @@
 <br>
 <!-- Sub-header -->
 <h4 class="text-center">Explanation</h4>
+<br>
+<p class="text-center textcenter">
+  Searching algorithms are used to take a search item (4), and determine whether or not it is present within a list of items (3,2,4,5,1). Linear search is a simple yet highly inefficient searching algorithm. Linear search first takes a search item and a list, and starting from the beginning of the list, compares the search item to each individual item in the list until the item is (or is not) found.
+</p>
+<br>
+<p class="text-center textcenter"><i>Linear Search</i></p>
+<img class="center" src="/static/img/linear.PNG">
+<br>
 {% endblock %}

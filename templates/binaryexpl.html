@@ -6,9 +6,16 @@
 <title>SearchSort</title>
 <style>
 .center {
-    margin: auto;
-    width: 60%;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    width: 30%;
     }
+
+.textcenter {
+  margin: auto;
+  width: 60%;
+}
 
 </style>
 
@@ -20,4 +27,12 @@
 <br>
 <!-- Sub Header -->
 <h4 class="text-center">Explanation</h4>
+<br>
+<p class="text-center textcenter">
+  Searching algorithms are used to take a search item (4), and determine whether or not the search item is present within a list of items (1,2,3,4,5). Binary search is a more complex, yet very efficient searching algorithm. Binary search first takes a search item and an ordered list. Then, the following series of steps is repeated, until the item is found or not found. Firstly, the middle item from the list is taken, and compared to the search item. If the search item is equal to the middle item, the index is returned, otherwise depending on whether the search item is larger or smaller than the middle item, the process is repeated on the upper or lower half of the given list.
+</p>
+<br>
+<p class="text-center textcenter"><i>Binary Search</i></p>
+<img class="center" src="/static/img/binary.PNG">
+<br>
 {% endblock %}

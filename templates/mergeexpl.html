@@ -6,9 +6,16 @@
 <title>SearchSort</title>
 <style>
 .center {
-    margin: auto;
-    width: 60%;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    width: 30%;
     }
+
+.textcenter {
+  margin: auto;
+  width: 60%;
+}
 
 </style>
 
@@ -20,4 +27,12 @@
 <br>
 <!-- Sub-header -->
 <h4 class="text-center">Explanation</h4>
+<br>
+<p class="text-center textcenter">
+  Sorting algorithms are used to take an unordered list (3,2,5,1,4), and output an ordered list containing the same elements (1,2,3,4,5). Merge sort is a more complex, yet very efficient sorting algorithm. Merge sort is made up of two main steps, splitting and merging. The splitting phase involves halving the list into two sub-lists repeatedly, until only single elements remain. The merging phase involves taking these sub lists, and combining them into larger ordered sub lists, until a single, fully sorted list remains.
+</p>
+<br>
+<p class="text-center textcenter"><i>Merge Sort</i></p>
+<img class="center" src="/static/img/merge.PNG">
+<br>
 {% endblock %}

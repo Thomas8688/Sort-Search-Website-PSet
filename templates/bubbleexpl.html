@@ -6,10 +6,16 @@
 <title>SearchSort</title>
 <style>
 .center {
-    margin: auto;
-    width: 60%;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    width: 30%;
     }
 
+.textcenter {
+  margin: auto;
+  width: 60%;
+}
 </style>
 
 {% endblock %}
@@ -20,4 +26,16 @@
 <br>
 <!-- Sub-header -->
 <h4 class="text-center">Explanation</h4>
+<br>
+<p class="text-center textcenter">
+  Sorting algorithms are used to take an unordered list (3,2,5,1,4), and output an ordered list containing the same elements (1,2,3,4,5). Bubble sort is a simple, yet inefficient sorting algorithm. Bubble sort works by looping through a list, comparing items in groups of two and performing swaps if the items are out of order. A standard bubble sort algorithm will work by looping through the list n (number of list elements) times, where each loop sees n comparisons. This way, every combination of comparisons will be made, and the list will definitely be sorted at the end.
+</p>
+<br>
+<p class="text-center textcenter">
+  However, there are a few ways that we can make bubble sort more efficient. First of all, the fact that in each loop, every possible pair of adjacent items is compared, allows us to deduce that one item will definitely be sorted to the end of the list. As a result, we can alter our algorithm to reduce the number of comparisons per loop by one each time. This is known as smart Bubble.  The second way in which we can improve the efficiency of bubble sort is by having a pass checker. The way that bubble sort works means that even if the list is given sorted, a fixed number of comparisons are still going to be made. A way we can fix this is by having a checker for each loop, which will increase each time a swap is made. By doing this, after each loop we can check if any swaps have been made, and if not, we know that the list is sorted, and can end the algorithm. This is known as short Bubble.
+</p>
+<br>
+<p class="text-center textcenter"><i>Short Smart Bubble Sort</i></p>
+<img class="center" src="/static/img/bubble.PNG">
+<br>
 {% endblock %}
